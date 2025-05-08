@@ -1,0 +1,24 @@
+name: Swap Comparison Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure no swap is active
+        run: |
+          sudo swapoff -a || true
+          sudo rm -f /swapfile
+
+      - name: Run original swap action (should fail)
+        continue-on-error: true
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 1
+
+      - name: Run patched swap action
+        uses: golergka/set-swap-space@master
+        with:
+          swap-size-gb: 1
